@@ -17,4 +17,5 @@ $ npx turbo-select
 ## Todo
 - exist process gracfully
 - storing previous selections
+- better readme
 - tests
