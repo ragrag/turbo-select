@@ -15,7 +15,7 @@ $ npx turbo-select
 
 
 ## Todo
-- exist process gracfully
+- exist process gracefully
 - storing previous selections
 - better readme
 - tests
