@@ -93,11 +93,11 @@ export const parseTurbo = async (): Promise<{
 };
 
 export const dispatchTurboCommand = (script: TurboScript, scopedPkgs: string[], options?: TurboSelectOptions): void => {
-	const scopesWithDeps = scopedPkgs.map(pkg => `--scope="${pkg}"`).join(' ');
+	const scopes = scopedPkgs.map(pkg => `--scope="${pkg}"`).join(' ');
 
 	const flags = `${options?.deps ? '--include-dependencies' : ''}`;
 
-	const turboCommand = `${script.command} ${scopesWithDeps} ${flags}`;
+	const turboCommand = `${script.command} ${scopes} ${flags}`;
 
 	execSync(turboCommand, {
 		stdio: 'inherit',
