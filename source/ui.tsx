@@ -32,12 +32,13 @@ const App: FC<{ options?: TurboSelectOptions }> = ({ options }) => {
 
 	// dispatch cli command
 	useEffect(() => {
-		const dispatchCommand = async () => {
+		const dispatchCommand = () => {
 			if (selectedScript && selectedPackages.length) {
 				setCliStep(3);
 				dispatchTurboCommand(selectedScript, selectedPackages, options);
 			}
 		};
+
 		dispatchCommand();
 	}, [selectedPackages]);
 
