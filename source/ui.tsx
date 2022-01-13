@@ -87,7 +87,7 @@ const App: FC<{ options?: TurboSelectOptions }> = ({ options }) => {
 					<MultiSelect items={packageOptions} onSubmit={onPackagesSelected} />
 				</>
 			) : (
-				<Text>Running Turbo</Text>
+				<Text>Running {selectedScript?.name} in Turbo</Text>
 			)}
 		</>
 	);

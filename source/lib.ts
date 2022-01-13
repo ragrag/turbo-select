@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import glob from 'glob';
-import { execSync } from 'child_process';
+import { spawn } from 'child_process';
 
 export type TurboSelectOptions = {
 	deps?: boolean;
@@ -38,7 +38,7 @@ const parseScripts = (pkgJson: IPackageJson): TurboScript[] => {
 	assertError(pkgJson.scripts, "Couldn't find package.json scripts");
 
 	return Object.entries(pkgJson.scripts)
-		.filter(([, command]) => command.includes('turbo'))
+		.filter(([, command]) => new RegExp(/^turbo\s/).test(command))
 		.map(([name, command]) => ({ name, command }));
 };
 
@@ -99,7 +99,8 @@ export const dispatchTurboCommand = (script: TurboScript, scopedPkgs: string[], 
 
 	const turboCommand = `${script.command} ${scopes} ${flags}`;
 
-	execSync(turboCommand, {
+	spawn(turboCommand, {
 		stdio: 'inherit',
+		shell: true,
 	});
 };
