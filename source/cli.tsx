@@ -4,26 +4,35 @@ import { render } from 'ink';
 import meow from 'meow';
 
 import App from './ui';
+import { loadSelection } from './storage';
+import { parseTurbo } from './lib';
 
-const cli = meow(
-	`
-	Usage
-	  $ turbo-select
-
-	Options
-		--no-deps exclude dependencies
-
-	Examples
-	  $ turbo-select 
-`,
-	{
-		flags: {
-			deps: {
-				type: 'boolean',
-				default: true,
+const initializeTurboSelect = async () => {
+	const cli = meow(
+		`
+		Usage
+		  $ turbo-select
+	
+		Options
+			--no-deps exclude dependencies
+	
+		Examples
+		  $ turbo-select 
+	`,
+		{
+			flags: {
+				deps: {
+					type: 'boolean',
+					default: true,
+				},
 			},
 		},
-	},
-);
+	);
 
-render(<App options={{ ...cli.flags }} />);
+	const monorepo = await parseTurbo();
+	const savedSelection = loadSelection(monorepo.name);
+
+	render(<App options={{ ...cli.flags }} savedSelection={savedSelection} monorepo={monorepo} />);
+};
+
+initializeTurboSelect();

@@ -1,27 +1,9 @@
 import fs from 'fs/promises';
 import path from 'path';
-import glob from 'glob';
+import fg from 'fast-glob';
 import { spawn } from 'child_process';
 
-export type TurboSelectOptions = {
-	deps?: boolean;
-};
-
-export type TurboScript = {
-	name: string;
-	command: string;
-};
-
-export type TurboPackage = {
-	name: string;
-	workspace: string;
-};
-
-type IPackageJson = Record<string, any> & {
-	name?: string;
-	scripts?: Record<string, string>;
-	workspaces?: string[];
-};
+import { IPackageJson, TurboScript, TurboPackage, TurboSelectOptions, MonoRepo } from './types';
 
 const assertError: (value: unknown, message?: string) => asserts value = (value: unknown, message?: string) => {
 	if (!value) {
@@ -45,39 +27,29 @@ const parseScripts = (pkgJson: IPackageJson): TurboScript[] => {
 const parseWorkspacePackages = async (pkgJson: IPackageJson): Promise<TurboPackage[]> => {
 	assertError(pkgJson.workspaces, 'No package workspaces found');
 
-	const workspaceWithPkgDirs = pkgJson.workspaces.reduce<
-		{
-			workspace: string;
-			dir: string;
-		}[]
-	>((acc, workspace) => {
-		const trimmedWorkSpace = workspace.replaceAll('/', '').replaceAll('*', '').trim();
+	const workspaceWithPkgDirs = await Promise.all(
+		pkgJson.workspaces.map(async workspace => {
+			const trimmedWorkSpace = workspace.replaceAll('/', '').replaceAll('*', '').trim();
+			const matchedDirectories = await fg(`${trimmedWorkSpace}/**/package.json`, { deep: 2 });
 
-		return [
-			...acc,
-			...glob
-				// @todo: use ignore opt to ignore node_modules
-				.sync(path.join(process.cwd(), `${trimmedWorkSpace}/**/package.json`))
-				.filter(dir => !dir.includes('node_modules'))
-				.map(dir => ({ workspace: trimmedWorkSpace, dir })),
-		];
-	}, []);
+			return matchedDirectories.map(dir => ({ workspace: trimmedWorkSpace, dir }));
+		}),
+	);
 
-	const workspacePackages: TurboPackage[] = [];
-	for (const { workspace, dir } of workspaceWithPkgDirs) {
-		const pkgJson = await parsePkgJson(dir);
-		if (pkgJson.name) {
-			workspacePackages.push({ workspace, name: pkgJson.name });
-		}
-	}
+	const workspacePackages = await Promise.all(
+		workspaceWithPkgDirs.flat().map(async ({ workspace, dir }) => {
+			const pkgJson = await parsePkgJson(dir);
+			if (pkgJson.name) {
+				return { workspace, name: pkgJson.name };
+			}
+			return null!;
+		}),
+	);
 
-	return workspacePackages;
+	return workspacePackages.filter(Boolean);
 };
 
-export const parseTurbo = async (): Promise<{
-	scripts: TurboScript[];
-	workspacePackages: TurboPackage[];
-}> => {
+export const parseTurbo = async (): Promise<MonoRepo> => {
 	const pkgJson: IPackageJson = await parsePkgJson(path.join(process.cwd(), 'package.json'));
 
 	const scripts = parseScripts(pkgJson);
@@ -89,10 +61,11 @@ export const parseTurbo = async (): Promise<{
 	return {
 		scripts,
 		workspacePackages,
+		name: pkgJson.name,
 	};
 };
 
-export const dispatchTurboCommand = (script: TurboScript, scopedPkgs: string[], options?: TurboSelectOptions): void => {
+export const runTurboCommand = (script: TurboScript, scopedPkgs: string[], options?: TurboSelectOptions): void => {
 	const scopes = scopedPkgs.map(pkg => `--scope="${pkg}"`).join(' ');
 
 	const flags = `${options?.deps ? '--include-dependencies' : ''}`;

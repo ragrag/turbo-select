@@ -1,62 +1,80 @@
 import React, { FC, useEffect, useState, useMemo } from 'react';
-import Spinner from 'ink-spinner';
 import { Text } from 'ink';
-import MultiSelect, { ListedItem } from 'ink-multi-select';
+import MultiSelect, { ListedItem, SelectedItem } from 'ink-multi-select';
 import SelectInput from 'ink-select-input';
 
-import { TurboSelectOptions, dispatchTurboCommand, parseTurbo, TurboPackage, TurboScript } from './lib';
+import { runTurboCommand } from './lib';
+import { TurboSelectOptions, TurboScript, MonoRepo } from './types';
+import { saveSelection } from './storage';
 
-const App: FC<{ options?: TurboSelectOptions }> = ({ options }) => {
-	const [loading, setLoading] = useState(true);
-	const [cliStep, setCliStep] = useState(1);
+type Props = {
+	options: TurboSelectOptions;
+	savedSelection: { scriptName: string; packages: string[] };
+	monorepo: MonoRepo;
+};
 
-	const [turboScripts, setTurboScripts] = useState<TurboScript[]>([]);
-	const [workspacePackages, setWorkspacePackages] = useState<TurboPackage[]>([]);
+const App: FC<Props> = ({ options, savedSelection, monorepo }) => {
+	const [cliStep, setCliStep] = useState(0);
 
-	const [selectedScript, setSelectedScript] = useState<TurboScript | null>(null);
+	const [selectedScript, setSelectedScript] = useState<TurboScript | undefined>(undefined);
 	const [selectedPackages, setSelectedPackages] = useState<string[]>([]);
 
-	// init
+	const [initialSelection, setInitialSelection] = useState<{ script: number; packages: SelectedItem[] }>({
+		script: 0,
+		packages: [],
+	});
+
+	// set initial selections from previously saved selections
 	useEffect(() => {
-		const initializeTurboSelect = async () => {
-			const { scripts, workspacePackages } = await parseTurbo();
+		const loadPreviousSelections = () => {
+			const { scripts, workspacePackages } = monorepo;
+			const initialSelection: { script: number; packages: SelectedItem[] } = { script: 0, packages: [] };
 
-			setTurboScripts(scripts);
-			setWorkspacePackages(workspacePackages);
+			if (savedSelection?.scriptName) {
+				const scriptIdx = scripts.findIndex(s => s.name === savedSelection.scriptName);
+				initialSelection.script = scriptIdx >= 0 ? scriptIdx : 0;
+			}
 
-			setLoading(false);
+			if (savedSelection?.packages?.length) {
+				const matchedPackages = workspacePackages.filter(pkg => savedSelection.packages.includes(pkg.name));
+				initialSelection.packages = matchedPackages.map(p => ({
+					label: `[${p.workspace}] - ${p.name}`,
+					value: p.name,
+					key: `${p.workspace}.${p.name}`,
+				}));
+			}
+
+			setInitialSelection(initialSelection);
 		};
 
-		initializeTurboSelect();
+		loadPreviousSelections();
+		setCliStep(1);
 	}, []);
 
-	// dispatch cli command
+	// run turbo
 	useEffect(() => {
-		const dispatchCommand = () => {
-			if (selectedScript && selectedPackages.length) {
-				setCliStep(3);
-				dispatchTurboCommand(selectedScript, selectedPackages, options);
-			}
-		};
-
-		dispatchCommand();
+		if (selectedScript && selectedPackages.length) {
+			setCliStep(3);
+			saveSelection(monorepo.name, { scriptName: selectedScript.name, packages: selectedPackages });
+			runTurboCommand(selectedScript, selectedPackages, options);
+		}
 	}, [selectedPackages]);
 
 	const scriptOptions = useMemo(() => {
-		return turboScripts.map(p => ({
+		return monorepo.scripts.map(p => ({
 			label: p.name,
 			value: p,
 			key: p.name,
 		}));
-	}, [turboScripts]);
+	}, [monorepo.scripts]);
 
 	const packageOptions = useMemo(() => {
-		return workspacePackages.map(p => ({
+		return monorepo.workspacePackages.map(p => ({
 			label: `[${p.workspace}] - ${p.name}`,
 			value: p.name,
 			key: `${p.workspace}.${p.name}`,
 		}));
-	}, [workspacePackages]);
+	}, [monorepo.workspacePackages]);
 
 	const onScriptSelected = (selected: { label: string; value: TurboScript }) => {
 		setSelectedScript(selected.value);
@@ -67,24 +85,17 @@ const App: FC<{ options?: TurboSelectOptions }> = ({ options }) => {
 		setSelectedPackages(selected.map(p => p.value as string));
 	};
 
-	return loading ? (
-		<Text>
-			<Text color="blue">
-				<Spinner type="dots" />
-			</Text>
-			{' Loading'}
-		</Text>
-	) : (
+	return (
 		<>
 			{cliStep === 1 ? (
 				<>
 					<Text>Select Script:</Text>
-					<SelectInput items={scriptOptions} onSelect={onScriptSelected} />
+					<SelectInput items={scriptOptions} initialIndex={initialSelection.script} onSelect={onScriptSelected} />
 				</>
 			) : cliStep === 2 ? (
 				<>
 					<Text>Select Packages:</Text>
-					<MultiSelect items={packageOptions} onSubmit={onPackagesSelected} />
+					<MultiSelect items={packageOptions} defaultSelected={initialSelection.packages} onSubmit={onPackagesSelected} />
 				</>
 			) : (
 				<Text>Running {selectedScript?.name} in Turbo</Text>
