@@ -102,5 +102,6 @@ export const dispatchTurboCommand = (script: TurboScript, scopedPkgs: string[], 
 	spawn(turboCommand, {
 		stdio: 'inherit',
 		shell: true,
+		cwd: process.cwd(),
 	});
 };
