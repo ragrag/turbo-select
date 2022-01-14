@@ -1,3 +1,4 @@
+// @todo change to esm
 const Conf = require('conf');
 
 const config = new Conf();
