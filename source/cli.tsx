@@ -4,7 +4,7 @@ import { render } from 'ink';
 import meow from 'meow';
 
 import App from './ui';
-import { loadSelection } from './storage';
+import Storage from './storage';
 import { parseTurbo } from './lib';
 
 const initializeTurboSelect = async () => {
@@ -35,7 +35,7 @@ const initializeTurboSelect = async () => {
 	);
 
 	const monorepo = await parseTurbo();
-	const savedSelection = loadSelection(monorepo.name);
+	const savedSelection = Storage.loadSelection(monorepo.name);
 
 	render(<App options={{ ...cli.flags }} savedSelection={savedSelection} monorepo={monorepo} />);
 };

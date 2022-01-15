@@ -3,11 +3,11 @@ import { Text, Box, Spacer } from 'ink';
 import MultiSelect, { ListedItem, SelectedItem } from 'ink-multi-select';
 import SelectInput from 'ink-select-input';
 import Gradient from 'ink-gradient';
+import chalk from 'chalk';
 
 import { runTurboCommand } from './lib';
 import { TurboSelectOptions, TurboScript, MonoRepo } from './types';
-import { saveSelection } from './storage';
-import chalk from 'chalk';
+import Storage from './storage';
 
 type Props = {
 	options: TurboSelectOptions;
@@ -76,7 +76,7 @@ const App: FC<Props> = ({ options, savedSelection, monorepo }) => {
 	useEffect(() => {
 		if (selectedScript && selectedPackages.length) {
 			setCliStep(3);
-			saveSelection(monorepo.name, { scriptName: selectedScript.name, packages: selectedPackages });
+			Storage.saveSelection(monorepo.name, { scriptName: selectedScript.name, packages: selectedPackages });
 			runTurboCommand(selectedScript, selectedPackages, options);
 		}
 	}, [selectedPackages]);
