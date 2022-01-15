@@ -1,6 +1,8 @@
 # turbo-select
 
-> Run Turborepo on selected packages via a nice prompt
+Run Turborepo on selected packages via a nice prompt
+
+<p align="center"><img src="/assets/demo.gif?raw=true"/></p>
 
 ## Getting Started
 
