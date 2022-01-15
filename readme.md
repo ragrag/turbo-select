@@ -2,7 +2,7 @@
 
 Run Turborepo on selected packages via a nice prompt
 
-<p align="center"><img src="/assets/demo.gif?raw=true"/></p>
+<p align="center"><img height="400" src="/assets/demo.gif?raw=true"/></p>
 
 ## Getting Started
 
