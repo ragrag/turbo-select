@@ -29,18 +29,17 @@ const App: FC<Props> = ({ options, savedSelection, monorepo }) => {
 	// load previous selections
 	useEffect(() => {
 		const { scripts, workspacePackages } = monorepo;
-		const { scriptName: savedScript, packages: savedPackages } = savedSelection;
 
 		const initialSelection: { script: number; packages: SelectedItem[] } = { script: 0, packages: [] };
 
-		if (savedScript) {
-			const scriptIdx = scripts.findIndex(s => s.name === savedScript);
+		if (savedSelection?.scriptName) {
+			const scriptIdx = scripts.findIndex(s => s.name === savedSelection.scriptName);
 			initialSelection.script = scriptIdx >= 0 ? scriptIdx : 0;
 		}
 
-		if (savedPackages?.length) {
+		if (savedSelection?.packages?.length) {
 			const matchedPackages = workspacePackages
-				.filter(pkg => savedPackages.includes(pkg.name))
+				.filter(pkg => savedSelection.packages.includes(pkg.name))
 				.map(p => ({
 					label: `[${p.workspace}] - ${p.name}`,
 					value: p.name,
