@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import fg from 'fast-glob';
 import { spawn } from 'child_process';
+import chalk from 'chalk';
 
 import { IPackageJson, TurboScript, TurboPackage, TurboSelectOptions, MonoRepo } from './types';
 
@@ -71,6 +72,9 @@ export const runTurboCommand = (script: TurboScript, scopedPkgs: string[], optio
 	const flags = `${options?.deps ? '--include-dependencies' : ''}`;
 
 	const turboCommand = `${script.command} ${scopes} ${flags}`;
+
+	console.log(chalk.blue(`Running ${script.name}`));
+	console.log(chalk.blue(turboCommand));
 
 	spawn(turboCommand, {
 		stdio: 'inherit',

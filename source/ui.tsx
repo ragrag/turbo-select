@@ -1,11 +1,13 @@
 import React, { FC, useEffect, useState, useMemo } from 'react';
-import { Text } from 'ink';
+import { Text, Box, Spacer } from 'ink';
 import MultiSelect, { ListedItem, SelectedItem } from 'ink-multi-select';
 import SelectInput from 'ink-select-input';
+import Gradient from 'ink-gradient';
 
 import { runTurboCommand } from './lib';
 import { TurboSelectOptions, TurboScript, MonoRepo } from './types';
 import { saveSelection } from './storage';
+import chalk from 'chalk';
 
 type Props = {
 	options: TurboSelectOptions;
@@ -24,32 +26,52 @@ const App: FC<Props> = ({ options, savedSelection, monorepo }) => {
 		packages: [],
 	});
 
-	// set initial selections from previously saved selections
+	// load previous selections
 	useEffect(() => {
-		const loadPreviousSelections = () => {
-			const { scripts, workspacePackages } = monorepo;
-			const initialSelection: { script: number; packages: SelectedItem[] } = { script: 0, packages: [] };
+		const { scripts, workspacePackages } = monorepo;
+		const { scriptName: savedScript, packages: savedPackages } = savedSelection;
 
-			if (savedSelection?.scriptName) {
-				const scriptIdx = scripts.findIndex(s => s.name === savedSelection.scriptName);
-				initialSelection.script = scriptIdx >= 0 ? scriptIdx : 0;
-			}
+		const initialSelection: { script: number; packages: SelectedItem[] } = { script: 0, packages: [] };
 
-			if (savedSelection?.packages?.length) {
-				const matchedPackages = workspacePackages.filter(pkg => savedSelection.packages.includes(pkg.name));
-				initialSelection.packages = matchedPackages.map(p => ({
+		if (savedScript) {
+			const scriptIdx = scripts.findIndex(s => s.name === savedScript);
+			initialSelection.script = scriptIdx >= 0 ? scriptIdx : 0;
+		}
+
+		if (savedPackages?.length) {
+			const matchedPackages = workspacePackages
+				.filter(pkg => savedPackages.includes(pkg.name))
+				.map(p => ({
 					label: `[${p.workspace}] - ${p.name}`,
 					value: p.name,
 					key: `${p.workspace}.${p.name}`,
 				}));
-			}
 
-			setInitialSelection(initialSelection);
-		};
+			initialSelection.packages = matchedPackages;
+		}
 
-		loadPreviousSelections();
+		setInitialSelection(initialSelection);
 		setCliStep(1);
 	}, []);
+
+	// options.script check
+	useEffect(() => {
+		const { script } = options;
+		if (script) {
+			const monorepoScript = monorepo.scripts.find(s => s.name === script);
+			if (!monorepoScript) {
+				console.log(chalk.yellow(`did not recognize '${script}' as a turbo script`));
+				return;
+			}
+			setSelectedScript(monorepoScript);
+		}
+	}, []);
+
+	useEffect(() => {
+		if (selectedScript) {
+			setCliStep(2);
+		}
+	}, [selectedScript]);
 
 	// run turbo
 	useEffect(() => {
@@ -78,7 +100,6 @@ const App: FC<Props> = ({ options, savedSelection, monorepo }) => {
 
 	const onScriptSelected = (selected: { label: string; value: TurboScript }) => {
 		setSelectedScript(selected.value);
-		setCliStep(2);
 	};
 
 	const onPackagesSelected = (selected: ListedItem[]) => {
@@ -87,6 +108,9 @@ const App: FC<Props> = ({ options, savedSelection, monorepo }) => {
 
 	return (
 		<>
+			<Box borderStyle="round" alignItems="center" flexDirection="column" borderColor="#6f2832" padding={1} width={30}>
+				<Gradient name="passion">Turbo Select </Gradient>
+			</Box>
 			{cliStep === 1 ? (
 				<>
 					<Text>Select Script:</Text>
@@ -98,7 +122,7 @@ const App: FC<Props> = ({ options, savedSelection, monorepo }) => {
 					<MultiSelect items={packageOptions} defaultSelected={initialSelection.packages} onSubmit={onPackagesSelected} />
 				</>
 			) : (
-				<Text>Running {selectedScript?.name} in Turbo</Text>
+				<Spacer />
 			)}
 		</>
 	);

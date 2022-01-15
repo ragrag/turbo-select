@@ -14,7 +14,8 @@ const initializeTurboSelect = async () => {
 		  $ turbo-select
 	
 		Options
-			--no-deps exclude dependencies
+			--no-deps dont use turbo repo --include-dependencies flag
+			--script specify which npm script to run
 	
 		Examples
 		  $ turbo-select 
@@ -24,6 +25,10 @@ const initializeTurboSelect = async () => {
 				deps: {
 					type: 'boolean',
 					default: true,
+				},
+				script: {
+					type: 'string',
+					default: '',
 				},
 			},
 		},

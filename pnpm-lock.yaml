@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@ava/typescript': ^3.0.1
   '@sindresorhus/tsconfig': ^2.0.0
+  '@types/ink-gradient': ^2.0.1
   '@types/react': ^17.0.38
   '@typescript-eslint/eslint-plugin': ^4.20.0
   '@typescript-eslint/parser': ^4.20.0
@@ -16,6 +17,7 @@ specifiers:
   eslint-plugin-react-hooks: ^4.3.0
   fast-glob: ^3.2.11
   ink: ^3.2.0
+  ink-gradient: ^2.0.0
   ink-multi-select: ^2.0.0
   ink-select-input: ^4.2.1
   ink-testing-library: ^2.1.0
@@ -31,6 +33,7 @@ dependencies:
   conf: 10.1.1
   fast-glob: 3.2.11
   ink: 3.2.0_b08e3c15324cbe90a6ff8fcd416c932c
+  ink-gradient: 2.0.0_ink@3.2.0+react@17.0.2
   ink-multi-select: 2.0.0
   ink-select-input: 4.2.1_ink@3.2.0+react@17.0.2
   meow: 9.0.0
@@ -39,6 +42,7 @@ dependencies:
 devDependencies:
   '@ava/typescript': 3.0.1
   '@sindresorhus/tsconfig': 2.0.0
+  '@types/ink-gradient': 2.0.1
   '@types/react': 17.0.38
   '@typescript-eslint/eslint-plugin': 4.33.0_3289a875d95a672b97ebf589745c66ef
   '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.5.4
@@ -1195,6 +1199,12 @@ packages:
       '@types/node': 17.0.8
     dev: true
 
+  /@types/ink-gradient/2.0.1:
+    resolution: {integrity: sha512-itcg0raINFVyexBQJVRkPopt/CLgBnDsqUi1JC096WquiD0NEBuKhtVvbvPiqJbtAffMAmtiXU24a5xSS0r1og==}
+    dependencies:
+      '@types/react': 17.0.38
+    dev: true
+
   /@types/json-schema/7.0.9:
     resolution: {integrity: sha512-qcUXuemtEu+E5wZSJHNxUXeCZhAfXKQ41D+duX+VYPde7xyEVZci+/oXKJL13tnRs9lR2pr4fod59GT6/X1/yQ==}
     dev: true
@@ -1236,6 +1246,10 @@ packages:
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
     dev: true
+
+  /@types/tinycolor2/1.4.3:
+    resolution: {integrity: sha512-Kf1w9NE5HEgGxCRyIcRXR/ZYtDv0V8FVPtYHwLxl0O+maGX0erE77pQlD0gpP+/KByMZ87mOA79SjifhSB3PjQ==}
+    dev: false
 
   /@types/yoga-layout/1.9.2:
     resolution: {integrity: sha512-S9q47ByT2pPvD65IvrWp7qppVMpk9WGMbVq9wbWZOHg6tnXSD4vyhao6nOSBwwfDdV2p3Kx9evA9vI+XWTfDvw==}
@@ -4182,6 +4196,14 @@ packages:
     resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}
     dev: true
 
+  /gradient-string/1.2.0:
+    resolution: {integrity: sha512-Lxog7IDMMWNjwo4O0KbdBvSewk4vW6kQe5XaLuuPCyCE65AGQ1P8YqKJa5dq8TYf/Ge31F+KjWzPR5mAJvjlAg==}
+    engines: {node: '>=4'}
+    dependencies:
+      chalk: 2.4.2
+      tinygradient: 0.4.3
+    dev: false
+
   /har-schema/2.0.0:
     resolution: {integrity: sha1-qUwiJOvKwEeCoNkDVSHyRzW37JI=}
     engines: {node: '>=4'}
@@ -4496,6 +4518,20 @@ packages:
     resolution: {integrity: sha512-7PnF4oN3CvZF23ADhA5wRaYEQpJ8qygSkbtTXWBeXWXmEVRXK+1ITciHWwHhsjv1TmW0MgacIv6hEi5pX5NQdA==}
     engines: {node: '>=10'}
     dev: true
+
+  /ink-gradient/2.0.0_ink@3.2.0+react@17.0.2:
+    resolution: {integrity: sha512-d2BK/EzzBRoDL54NWkS3JGE4J8xtzwRVWxDAIkQ/eQ60XIzrFMtT5JlUqgV05Qlt32Jvk50qW51YqxGJggTuqA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      ink: '>=3.0.0'
+      react: '>=16.8.0'
+    dependencies:
+      gradient-string: 1.2.0
+      ink: 3.2.0_b08e3c15324cbe90a6ff8fcd416c932c
+      prop-types: 15.8.1
+      react: 17.0.2
+      strip-ansi: 6.0.1
+    dev: false
 
   /ink-multi-select/2.0.0:
     resolution: {integrity: sha512-IK1oTucJ3gy/2M3xXicuTJCuCLSeQzdAf+iJV7eyfxYG4kCSO9W2TSV02TVfz+AKS8/8r7X/ssTlDRmAXjLZHQ==}
@@ -7802,6 +7838,17 @@ packages:
   /timsort/0.3.0:
     resolution: {integrity: sha1-QFQRqOfmM5/mTbmiNN4R3DHgK9Q=}
     dev: true
+
+  /tinycolor2/1.4.2:
+    resolution: {integrity: sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==}
+    dev: false
+
+  /tinygradient/0.4.3:
+    resolution: {integrity: sha512-tBPYQSs6eWukzzAITBSmqcOwZCKACvRa/XjPPh1mj4mnx4G3Drm51HxyCTU/TKnY8kG4hmTe5QlOh9O82aNtJQ==}
+    dependencies:
+      '@types/tinycolor2': 1.4.3
+      tinycolor2: 1.4.2
+    dev: false
 
   /to-absolute-glob/2.0.2:
     resolution: {integrity: sha1-GGX0PZ50sIItufFFt4z/fQ98hJs=}
