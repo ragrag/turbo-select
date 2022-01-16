@@ -30,10 +30,10 @@ const parseWorkspacePackages = async (pkgJson: IPackageJson): Promise<TurboPacka
 
 	const workspaceWithPkgDirs = await Promise.all(
 		pkgJson.workspaces.map(async workspace => {
-			const trimmedWorkSpace = workspace.replaceAll('/', '').replaceAll('*', '').trim();
-			const matchedDirectories = await fg(`${trimmedWorkSpace}/**/package.json`, { deep: 2 });
+			const workspaceWithoutGlob = workspace.replace(/\/\*$/, '').replace(/\/$/, '');
+			const matchedDirectories = await fg(`${workspaceWithoutGlob}/**/package.json`, { deep: 2 });
 
-			return matchedDirectories.map(dir => ({ workspace: trimmedWorkSpace, dir }));
+			return matchedDirectories.map(dir => ({ workspace: workspaceWithoutGlob, dir }));
 		}),
 	);
 
