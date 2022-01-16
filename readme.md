@@ -22,9 +22,11 @@ $ npx turbo-select@latest
 ```
 
 
-## Todo
-- better ui for selection (single selection screen for scripts & packages, grouping packages by workspace)
-- move cjs imports to esm (currently only conf)
-- better readme (demo gif, description)
-- tests (github actions matrix for windows & linux with example turborepo)
-- support more turbo cli flags
+## CLI Flags
+| flag                   | description                                                                                         |
+|------------------------|-----------------------------------------------------------------------------------------------------|
+| --script=<script name> | specify which npm script to run (skips script selection)                                            | 
+| --no-deps              | by default turbo-select adds --include-dependencies. this flag will stop turbo-select from using it |
+
+
+	
