@@ -22,9 +22,9 @@ const initializeTurboSelect = async () => {
 	`,
 		{
 			flags: {
-				deps: {
+				build: {
 					type: 'boolean',
-					default: true,
+					default: false,
 				},
 				script: {
 					type: 'string',

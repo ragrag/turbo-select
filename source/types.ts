@@ -5,7 +5,7 @@ export type MonoRepo = {
 };
 
 export type TurboSelectOptions = {
-	deps?: boolean;
+	build?: boolean;
 	script?: string;
 };
 

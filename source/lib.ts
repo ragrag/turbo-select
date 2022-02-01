@@ -69,9 +69,8 @@ export const parseTurbo = async (): Promise<MonoRepo> => {
 export const runTurboCommand = (script: TurboScript, scopedPkgs: string[], options?: TurboSelectOptions): void => {
 	const scopes = scopedPkgs.map(pkg => `--scope="${pkg}"`).join(' ');
 
-	const flags = `${options?.deps ? '--include-dependencies' : ''}`;
-
-	const turboCommand = `${script.command} ${scopes} ${flags}`;
+	const buildCommand = options?.build && script.name !== 'build' ? `turbo run build ${scopes} --include-dependencies --no-deps &&` : '';
+	const turboCommand = `${buildCommand} ${script.command} ${scopes} --no-deps`;
 
 	console.log(chalk.blue(`Running ${script.name}`));
 	console.log(chalk.blue(turboCommand));
