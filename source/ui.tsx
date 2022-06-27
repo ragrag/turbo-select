@@ -77,7 +77,7 @@ const App: FC<Props> = ({ options, savedSelection, monorepo }) => {
 		if (selectedScript && selectedPackages.length) {
 			setCliStep(3);
 			Storage.saveSelection(monorepo.name, { scriptName: selectedScript.name, packages: selectedPackages });
-			runTurboCommand(selectedScript, selectedPackages, options);
+			runTurboCommand(selectedScript, selectedPackages);
 		}
 	}, [selectedPackages]);
 

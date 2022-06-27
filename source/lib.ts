@@ -4,7 +4,7 @@ import fg from 'fast-glob';
 import { spawn } from 'child_process';
 import chalk from 'chalk';
 
-import { IPackageJson, TurboScript, TurboPackage, TurboSelectOptions, MonoRepo } from './types';
+import { IPackageJson, TurboScript, TurboPackage, MonoRepo } from './types';
 
 const assertError: (value: unknown, message?: string) => asserts value = (value: unknown, message?: string) => {
 	if (!value) {
@@ -14,7 +14,7 @@ const assertError: (value: unknown, message?: string) => asserts value = (value:
 
 const parsePkgJson = async (path: string): Promise<IPackageJson> => {
 	const packageJsonBuffer = await fs.readFile(path);
-	return JSON.parse(packageJsonBuffer as any);
+	return JSON.parse(packageJsonBuffer.toString());
 };
 
 const parseScripts = (pkgJson: IPackageJson): TurboScript[] => {
@@ -66,11 +66,9 @@ export const parseTurbo = async (): Promise<MonoRepo> => {
 	};
 };
 
-export const runTurboCommand = (script: TurboScript, scopedPkgs: string[], options?: TurboSelectOptions): void => {
-	const scopes = scopedPkgs.map(pkg => `--scope="${pkg}"`).join(' ');
-
-	const buildCommand = options?.build && script.name !== 'build' ? `turbo run build ${scopes} --include-dependencies --no-deps &&` : '';
-	const turboCommand = `${buildCommand} ${script.command} ${scopes} --no-deps`;
+export const runTurboCommand = (script: TurboScript, scopedPkgs: string[]): void => {
+	const scopes = scopedPkgs.map(pkg => `--filter="${pkg}"`).join(' ');
+	const turboCommand = `turbo run ${script.name} ${scopes}`;
 
 	console.log(chalk.blue(`Running ${script.name}`));
 	console.log(chalk.blue(turboCommand));
