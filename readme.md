@@ -16,17 +16,14 @@ And then in the root of your turbo repo
 $ turbo-select
 ```
 
+or 
+
+```bash
+$ turbo-select <script>
+```
+
 ## Direct usage with npx
 ```bash
 $ npx turbo-select@latest
 ```
 
-
-## CLI Flags
-| flag                   | description                                                                                         |
-|------------------------|-----------------------------------------------------------------------------------------------------|
-| --script=<script name> | specify which npm script to run (skips script selection)                                            | 
-| --no-deps              | by default turbo-select adds --include-dependencies. this flag will stop turbo-select from using it |
-
-
-	
