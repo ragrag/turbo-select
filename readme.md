@@ -1,4 +1,4 @@
-# turbo-select
+# Turbo Select
 
 Run Turborepo on selected packages via a nice prompt
 
