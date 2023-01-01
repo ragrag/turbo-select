@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 import inquirer from 'inquirer';
 import readPackage from 'to-read-package';
 import queryWorkspaces from 'to-query-workspaces';
@@ -7,8 +6,11 @@ import upath from 'upath';
 import Conf from 'conf';
 import { execaCommand } from 'execa';
 import { groupBy } from 'lodash-es';
+import boxen from 'boxen';
+import chalk from 'chalk';
 
 const run = async () => {
+	console.log(boxen(chalk.red('Turbo Select'), { padding: 1, borderColor: 'blue', borderStyle: 'round', dimBorder: true }));
 	const config = new Conf({ projectName: 'turbo-select' });
 	const { script: savedScript = null, projects: savedProjects = [] } = config.get('default');
 
@@ -93,7 +95,7 @@ const run = async () => {
 			return `${prev}--filter=${cur} `;
 		}, '');
 
-	console.log(turboCommand);
+	console.log(chalk.blue('Running:', turboCommand));
 	execaCommand(turboCommand, { stdio: 'inherit' });
 };
 
