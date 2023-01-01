@@ -27,7 +27,6 @@ $ turbo-select <script>
 $ npx turbo-select
 ```
 
-
 ## Prerequisites
 
 The only prerequisites for Turbo Select to work is to include ```workspaces``` in your workspace root package.json e.g:
