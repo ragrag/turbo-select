@@ -24,7 +24,7 @@ $ turbo-select <script>
 
 ## Direct usage with npx
 ```bash
-$ npx turbo-select@latest
+$ npx turbo-select
 ```
 
 
