@@ -2,12 +2,12 @@
 
 Run Turborepo on selected packages via a nice prompt
 
-<p align="center"><img height="400" src="/assets/terminal-demo.gif?raw=true"/></p>
+<p align="center"><img height="400" src="https://user-images.githubusercontent.com/35541698/210180982-e4af6d5d-df31-4b7a-a715-52e9a4e6b47c.gif"/></p>
 
 ## Getting Started
 
 ```bash
-$ npm install -g turbo-select
+ npm install -g turbo-select
 ```
 
 And then in the root of your turbo repo
