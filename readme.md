@@ -2,7 +2,8 @@
 
 Run Turborepo on selected packages via a nice prompt
 
-<p align="center"><img height="400" src="https://user-images.githubusercontent.com/35541698/210180982-e4af6d5d-df31-4b7a-a715-52e9a4e6b47c.gif"/></p>
+<p align="center"><img height="400" src="https://user-images.githubusercontent.com/35541698/210186167-31efdba7-24cd-4c4b-90b7-7bc63b324627.gif"/></p>
+
 
 ## Getting Started
 
