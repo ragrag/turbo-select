@@ -12,7 +12,9 @@ import chalk from 'chalk';
 const run = async () => {
 	console.log(boxen(chalk.red('Turbo Select'), { padding: 1, borderColor: 'blue', borderStyle: 'round', dimBorder: true }));
 	const config = new Conf({ projectName: 'turbo-select' });
-	const { script: savedScript = null, projects: savedProjects = [] } = config.get('default');
+	const savedConfig = config.get('default');
+	const savedScript = savedConfig?.script;
+	const savedProjects = savedConfig?.projects ?? [];
 
 	const projects = queryWorkspaces([]);
 
