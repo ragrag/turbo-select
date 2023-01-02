@@ -61,7 +61,7 @@ const run = async () => {
 		const folderName = directorySplit[directorySplit.length - 1];
 		const workspace = directorySplit[0];
 
-		return { name: folderName, workspace, checked: savedProjects.includes(project.name), value: project.name };
+		return { name: project.name, workspace, checked: savedProjects.includes(project.name), value: project.name };
 	});
 
 	const projectsByWorkspace = groupBy(choices, 'workspace');
