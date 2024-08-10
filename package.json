@@ -1,6 +1,6 @@
 {
 	"name": "turbo-select",
-	"version": "2.1.0",
+	"version": "2.1.1",
 	"license": "MIT",
 	"bin": "src/index.js",
 	"engines": {
@@ -23,7 +23,6 @@
 		"lodash-es": "^4.17.21",
 		"to-query-workspaces": "^1.5.0",
 		"to-read-package": "^1.5.0",
-		"tsup": "^6.5.0",
 		"upath": "^2.0.1"
 	},
 	"repository": {
